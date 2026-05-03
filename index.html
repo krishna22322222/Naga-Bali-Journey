@@ -28,11 +28,6 @@
         <a href="#excursions">Excursions</a>
         <a href="#contact">Contact</a>
       </div>
-      <button class="music-toggle" id="musicToggle" aria-label="Toggle background music" title="Toggle Music">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <circle cx="12" cy="12" r="1"/><path d="M9 9h0"/><path d="M15 15h0"/><path d="M9 15a6 6 0 0 0 6 0"/><path d="M9 9a6 6 0 0 1 6 0"/>
-        </svg>
-      </button>
       <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
         <span></span><span></span><span></span>
       </button>
@@ -40,7 +35,7 @@
   </nav>
 
   <!-- Background Music -->
-  <audio id="bgMusic" loop volume="0.3" autoplay muted>
+  <audio id="bgMusic" loop>
     <source src="music.mp3" type="audio/mpeg">
   </audio>
 
@@ -59,6 +54,13 @@
       <img src="images/10.jpeg" alt="Bali 10" class="hero-slide">
     </div>
     <div class="hero-overlay"></div>
+    <button class="music-toggle" id="musicToggle" aria-label="Toggle background music" title="Toggle Music">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M9 18V5l12-2v13" />
+        <circle cx="6" cy="18" r="3" />
+        <circle cx="18" cy="16" r="3" />
+      </svg>
+    </button>
     <div class="hero-content">
       <div class="hero-badge">🌺 Warmest Greeting from Bali</div>
       <h1>Discover the <em>Magic</em> of Bali</h1>

@@ -117,54 +117,69 @@ window.addEventListener('scroll', () => {
 // Background music control
 const bgMusic = document.getElementById('bgMusic');
 const musicToggle = document.getElementById('musicToggle');
-let isMusicPlaying = true;
-let musicInitialized = false;
+let isMusicPlaying = false;
 
-// Attempt autoplay with user interaction fallback
-function enableMusicAutoplay() {
-  if (musicInitialized) return;
-  musicInitialized = true;
-  
-  bgMusic.muted = false;
-  bgMusic.play().catch(() => {
-    console.log('Autoplay in progress');
-  });
-  isMusicPlaying = true;
-  musicToggle.classList.add('playing');
-  localStorage.setItem('musicPlaying', 'true');
+// Set initial volume
+bgMusic.volume = 0.3;
+
+async function startBackgroundMusic() {
+  try {
+    bgMusic.volume = 0.3;
+    const playPromise = bgMusic.play();
+    if (playPromise !== undefined) {
+      await playPromise;
+      isMusicPlaying = true;
+      musicToggle.classList.add('playing');
+      localStorage.setItem('musicPlaying', 'true');
+    }
+  } catch (err) {
+    console.log('Music autoplay waiting for user interaction:', err.message);
+  }
 }
 
-// Enable autoplay on first user interaction
-const autoplayTriggers = ['click', 'scroll', 'touchstart', 'keydown'];
-autoplayTriggers.forEach(trigger => {
-  document.addEventListener(trigger, enableMusicAutoplay, { once: true });
+// Attempt autoplay on page load with a small delay
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    startBackgroundMusic();
+  }, 500);
 });
 
-// Also try autoplay immediately
-if (bgMusic) {
-  bgMusic.muted = false;
-  const playPromise = bgMusic.play();
-  if (playPromise !== undefined) {
-    playPromise.catch(() => {
-      console.log('Autoplay prevented - awaiting user interaction');
-    });
-  }
-  isMusicPlaying = true;
-  musicToggle.classList.add('playing');
+// Also try immediately in case load fires before script
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(startBackgroundMusic, 500);
+  });
+} else {
+  setTimeout(startBackgroundMusic, 500);
 }
 
+// Try again after first user interaction if autoplay failed
+const interactionEvents = ['click', 'touchstart', 'keydown', 'scroll'];
+interactionEvents.forEach(eventName => {
+  document.addEventListener(eventName, () => {
+    if (!isMusicPlaying) {
+      startBackgroundMusic();
+    }
+  }, { once: true });
+});
+
 // Music toggle button click
-musicToggle.addEventListener('click', () => {
+musicToggle.addEventListener('click', async () => {
   if (isMusicPlaying) {
     bgMusic.pause();
     isMusicPlaying = false;
     musicToggle.classList.remove('playing');
     localStorage.setItem('musicPlaying', 'false');
   } else {
-    bgMusic.play();
-    isMusicPlaying = true;
-    musicToggle.classList.add('playing');
-    localStorage.setItem('musicPlaying', 'true');
+    try {
+      bgMusic.volume = 0.3;
+      await bgMusic.play();
+      isMusicPlaying = true;
+      musicToggle.classList.add('playing');
+      localStorage.setItem('musicPlaying', 'true');
+    } catch (err) {
+      console.log('Play request blocked:', err.message);
+    }
   }
 });
 
