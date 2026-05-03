@@ -113,3 +113,44 @@ window.addEventListener('scroll', () => {
     }
   });
 });
+
+// Background music control
+const bgMusic = document.getElementById('bgMusic');
+const musicToggle = document.getElementById('musicToggle');
+let isMusicPlaying = false;
+
+// Initialize music state from localStorage
+const musicState = localStorage.getItem('musicPlaying');
+if (musicState === 'true') {
+  bgMusic.play().catch(() => {
+    console.log('Autoplay prevented - user interaction required');
+  });
+  isMusicPlaying = true;
+  musicToggle.classList.add('playing');
+}
+
+// Music toggle button click
+musicToggle.addEventListener('click', () => {
+  if (isMusicPlaying) {
+    bgMusic.pause();
+    isMusicPlaying = false;
+    musicToggle.classList.remove('playing');
+    localStorage.setItem('musicPlaying', 'false');
+  } else {
+    bgMusic.play();
+    isMusicPlaying = true;
+    musicToggle.classList.add('playing');
+    localStorage.setItem('musicPlaying', 'true');
+  }
+});
+
+// Update button state when audio events fire
+bgMusic.addEventListener('play', () => {
+  isMusicPlaying = true;
+  musicToggle.classList.add('playing');
+});
+
+bgMusic.addEventListener('pause', () => {
+  isMusicPlaying = false;
+  musicToggle.classList.remove('playing');
+});

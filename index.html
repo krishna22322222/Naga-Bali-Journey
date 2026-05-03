@@ -28,11 +28,21 @@
         <a href="#excursions">Excursions</a>
         <a href="#contact">Contact</a>
       </div>
+      <button class="music-toggle" id="musicToggle" aria-label="Toggle background music" title="Toggle Music">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="1"/><path d="M9 9h0"/><path d="M15 15h0"/><path d="M9 15a6 6 0 0 0 6 0"/><path d="M9 9a6 6 0 0 1 6 0"/>
+        </svg>
+      </button>
       <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
         <span></span><span></span><span></span>
       </button>
     </div>
   </nav>
+
+  <!-- Background Music -->
+  <audio id="bgMusic" loop volume="0.3">
+    <source src="music.mp3" type="audio/mpeg">
+  </audio>
 
   <!-- Hero -->
   <section class="hero" id="home">
