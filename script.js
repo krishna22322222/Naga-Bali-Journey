@@ -117,14 +117,38 @@ window.addEventListener('scroll', () => {
 // Background music control
 const bgMusic = document.getElementById('bgMusic');
 const musicToggle = document.getElementById('musicToggle');
-let isMusicPlaying = false;
+let isMusicPlaying = true;
+let musicInitialized = false;
 
-// Initialize music state from localStorage
-const musicState = localStorage.getItem('musicPlaying');
-if (musicState === 'true') {
+// Attempt autoplay with user interaction fallback
+function enableMusicAutoplay() {
+  if (musicInitialized) return;
+  musicInitialized = true;
+  
+  bgMusic.muted = false;
   bgMusic.play().catch(() => {
-    console.log('Autoplay prevented - user interaction required');
+    console.log('Autoplay in progress');
   });
+  isMusicPlaying = true;
+  musicToggle.classList.add('playing');
+  localStorage.setItem('musicPlaying', 'true');
+}
+
+// Enable autoplay on first user interaction
+const autoplayTriggers = ['click', 'scroll', 'touchstart', 'keydown'];
+autoplayTriggers.forEach(trigger => {
+  document.addEventListener(trigger, enableMusicAutoplay, { once: true });
+});
+
+// Also try autoplay immediately
+if (bgMusic) {
+  bgMusic.muted = false;
+  const playPromise = bgMusic.play();
+  if (playPromise !== undefined) {
+    playPromise.catch(() => {
+      console.log('Autoplay prevented - awaiting user interaction');
+    });
+  }
   isMusicPlaying = true;
   musicToggle.classList.add('playing');
 }
